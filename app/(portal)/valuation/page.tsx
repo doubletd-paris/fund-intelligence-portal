@@ -22,6 +22,17 @@ const valuationRows = assets.slice(0, 12).map((asset) => {
   };
 });
 
+const portfolioValuationTrendData = [
+  { period: "2024 Q1", value: 3560 },
+  { period: "2024 Q2", value: 3625 },
+  { period: "2024 Q3", value: 3670 },
+  { period: "2024 Q4", value: 3715 },
+  { period: "2025 Q1", value: 3750 },
+  { period: "2025 Q2", value: 3780 },
+  { period: "2025 Q3", value: 3806 },
+  { period: "2025 Q4", value: 3840 }
+];
+
 export default function ValuationPage() {
   return (
     <PageShell
@@ -45,16 +56,7 @@ export default function ValuationPage() {
       </div>
       <LineChartCard
         title="Portfolio valuation trend"
-        data={[
-          { period: "2024 Q1", value: 3560 },
-          { period: "2024 Q2", value: 3625 },
-          { period: "2024 Q3", value: 3670 },
-          { period: "2024 Q4", value: 3715 },
-          { period: "2025 Q1", value: 3750 },
-          { period: "2025 Q2", value: 3780 },
-          { period: "2025 Q3", value: 3806 },
-          { period: "2025 Q4", value: 3840 }
-        ]}
+        data={portfolioValuationTrendData}
         lines={[{ dataKey: "value", color: "#204a74", name: "EUR m" }]}
       />
     </PageShell>
