@@ -22,6 +22,15 @@ const allocationByGeography = [
   { period: "Other", value: 23 }
 ];
 
+const benchmarkChartData = benchmarkSeries.map((item) => ({
+  period: item.period,
+  fund: item.fund,
+  incomeReturn: item.incomeReturn,
+  capitalReturn: item.capitalReturn,
+  inrevOdce: item.inrevOdce,
+  msciPepfi: item.msciPepfi
+}));
+
 export default function FundOverviewPage() {
   return (
     <PageShell
@@ -42,7 +51,7 @@ export default function FundOverviewPage() {
       <div className="grid gap-4 xl:grid-cols-[1.25fr_0.75fr]">
         <LineChartCard
           title="Ten-year total return and benchmarks"
-          data={benchmarkSeries}
+          data={benchmarkChartData}
           lines={[
             { dataKey: "fund", color: "#204a74", name: "Fund" },
             { dataKey: "inrevOdce", color: "#6483a6", name: "INREV ODCE" },
@@ -88,8 +97,8 @@ export default function FundOverviewPage() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1fr_1fr_0.9fr]">
-        <AreaChartCard title="Income return" data={benchmarkSeries} dataKey="incomeReturn" color="#204a74" />
-        <AreaChartCard title="Capital return" data={benchmarkSeries} dataKey="capitalReturn" color="#9aafc6" />
+        <AreaChartCard title="Income return" data={benchmarkChartData} dataKey="incomeReturn" color="#204a74" />
+        <AreaChartCard title="Capital return" data={benchmarkChartData} dataKey="capitalReturn" color="#9aafc6" />
         <Card className="p-6">
           <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Presenter route</div>
           <div className="mt-4 space-y-3 text-sm text-slate-600">
