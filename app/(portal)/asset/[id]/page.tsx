@@ -25,6 +25,14 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
     annualRent: formatCurrency(lease.annualRent)
   }));
 
+  const valuationChartData = asset.valuationHistory.map((valuation) => ({
+    period: valuation.period,
+    value: valuation.value,
+    niy: valuation.niy,
+    qoqChange: valuation.qoqChange,
+    yoyChange: valuation.yoyChange
+  }));
+
   return (
     <PageShell
       eyebrow="Asset Detail"
@@ -74,8 +82,8 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
       </div>
 
       <div className="grid gap-4 xl:grid-cols-2">
-        <AreaChartCard title="Valuation history" data={asset.valuationHistory} dataKey="value" color="#204a74" />
-        <BarChartCard title="Yield movement" data={asset.valuationHistory} bars={[{ dataKey: "niy", color: "#7c96b3", name: "NIY" }]} />
+        <AreaChartCard title="Valuation history" data={valuationChartData} dataKey="value" color="#204a74" />
+        <BarChartCard title="Yield movement" data={valuationChartData} bars={[{ dataKey: "niy", color: "#7c96b3", name: "NIY" }]} />
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1fr_1fr_0.9fr]">
