@@ -3,6 +3,14 @@ import { PageShell } from "@/components/layout/page-shell";
 import { DataTable } from "@/components/ui/data-table";
 import { Card } from "@/components/ui/primitives";
 
+const adminRows = users.map((user) => ({
+  id: user.id,
+  name: user.name,
+  role: user.role,
+  portalMode: user.portalMode,
+  organization: user.organization
+}));
+
 export default function AdminPage() {
   return (
     <PageShell
@@ -39,7 +47,7 @@ export default function AdminPage() {
       </div>
       <DataTable
         title="Demo users"
-        rows={users}
+        rows={adminRows}
         columns={[
           { key: "name", label: "User" },
           { key: "role", label: "Role" },
