@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background: #f4f2ee;
+  color: #17212b;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+* {
+  border-color: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: rgba(32, 74, 116, 0.14);
+}
+
+.leaflet-container {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
