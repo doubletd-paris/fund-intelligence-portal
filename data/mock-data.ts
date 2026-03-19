@@ -47,6 +47,23 @@ const heroTones = [
   ["#f1f4f8", "#b7c2d4"]
 ];
 
+type DebtFacilitySeed = Pick<
+  DebtFacility,
+  "lender" | "facilityName" | "type" | "amount" | "drawn" | "marginBps" | "maturityDate" | "fixedPct" | "covenantStatus"
+>;
+
+type TransactionSeed = Pick<
+  Transaction,
+  "name" | "type" | "stage" | "probability" | "expectedClose" | "geography" | "sector" | "price" | "impact"
+>;
+
+type DocumentSeed = Pick<Document, "name" | "category" | "date" | "classification">;
+
+type DataSourceSeed = Pick<
+  DataSource,
+  "name" | "sourceType" | "lastUpload" | "status" | "frequency" | "linkedObjects" | "completenessPct" | "owner"
+>;
+
 export const periods: ReportingPeriod[] = reportingPeriods;
 
 export const fund: Fund = {
@@ -192,24 +209,26 @@ export const investors: Investor[] = Array.from({ length: 28 }).map((_, index) =
   dataQuality: index % 8 === 0 ? "Medium" : "High"
 }));
 
-export const debtFacilities: DebtFacility[] = [
-  ["NordLand Bank", "Fund RCF", "RCF", 210000000, 140000000, 165, "2027-05-31", 35, "Comfortable"],
-  ["Helios Credit", "Paris Office Term", "Term Loan", 180000000, 180000000, 152, "2028-09-30", 72, "Comfortable"],
-  ["Continental Landesbank", "German Logistics Green", "Green Loan", 240000000, 180000000, 148, "2027-11-30", 58, "Monitor"],
-  ["Avenue Debt Partners", "Living Portfolio Loan", "Term Loan", 125000000, 99000000, 172, "2026-12-31", 41, "Tight"],
-  ["Meridian Bank", "Benelux Campus Facility", "Term Loan", 145000000, 110000000, 159, "2028-03-31", 64, "Comfortable"],
-  ["Alpine Credit", "Nordics RCF", "RCF", 95000000, 42000000, 183, "2026-10-31", 22, "Monitor"]
-].map((item, index) => ({
+const debtFacilitySeeds: DebtFacilitySeed[] = [
+  { lender: "NordLand Bank", facilityName: "Fund RCF", type: "RCF", amount: 210000000, drawn: 140000000, marginBps: 165, maturityDate: "2027-05-31", fixedPct: 35, covenantStatus: "Comfortable" },
+  { lender: "Helios Credit", facilityName: "Paris Office Term", type: "Term Loan", amount: 180000000, drawn: 180000000, marginBps: 152, maturityDate: "2028-09-30", fixedPct: 72, covenantStatus: "Comfortable" },
+  { lender: "Continental Landesbank", facilityName: "German Logistics Green", type: "Green Loan", amount: 240000000, drawn: 180000000, marginBps: 148, maturityDate: "2027-11-30", fixedPct: 58, covenantStatus: "Monitor" },
+  { lender: "Avenue Debt Partners", facilityName: "Living Portfolio Loan", type: "Term Loan", amount: 125000000, drawn: 99000000, marginBps: 172, maturityDate: "2026-12-31", fixedPct: 41, covenantStatus: "Tight" },
+  { lender: "Meridian Bank", facilityName: "Benelux Campus Facility", type: "Term Loan", amount: 145000000, drawn: 110000000, marginBps: 159, maturityDate: "2028-03-31", fixedPct: 64, covenantStatus: "Comfortable" },
+  { lender: "Alpine Credit", facilityName: "Nordics RCF", type: "RCF", amount: 95000000, drawn: 42000000, marginBps: 183, maturityDate: "2026-10-31", fixedPct: 22, covenantStatus: "Monitor" }
+];
+
+export const debtFacilities: DebtFacility[] = debtFacilitySeeds.map((facility, index) => ({
   id: `debt-${index + 1}`,
-  lender: item[0],
-  facilityName: item[1],
-  type: item[2] as DebtFacility["type"],
-  amount: item[3] as number,
-  drawn: item[4] as number,
-  marginBps: item[5] as number,
-  maturityDate: item[6] as string,
-  fixedPct: item[7] as number,
-  covenantStatus: item[8] as DebtFacility["covenantStatus"],
+  lender: facility.lender,
+  facilityName: facility.facilityName,
+  type: facility.type,
+  amount: facility.amount,
+  drawn: facility.drawn,
+  marginBps: facility.marginBps,
+  maturityDate: facility.maturityDate,
+  fixedPct: facility.fixedPct,
+  covenantStatus: facility.covenantStatus,
   linkedAssets: assets.slice(index * 3, index * 3 + 4).map((asset) => asset.id),
   classification: "Internal Confidential",
   dataSource: "Debt Schedule",
@@ -217,23 +236,25 @@ export const debtFacilities: DebtFacility[] = [
   dataQuality: index === 3 ? "Watch" : "High"
 }));
 
-export const transactions: Transaction[] = [
-  ["Project Linden Quay", "Acquisition", "Exclusivity", 72, "2026-07-15", "Netherlands", "Logistics", 128000000, "Adds prime Randstad logistics exposure"],
-  ["Project Atelier", "Acquisition", "IC Review", 48, "2026-09-30", "France", "Residential", 94000000, "Improves living allocation in Lyon"],
-  ["Project Meridian Park", "Disposal", "Documentation", 85, "2026-06-28", "Germany", "Office", 156000000, "Releases capital from non-core office cluster"],
-  ["Project Sienna", "Acquisition", "Origination", 25, "2026-12-12", "Spain", "Alternatives", 76000000, "Introduces life sciences angle in Barcelona"],
-  ["Project Canal Market", "Disposal", "Closing", 96, "2026-04-25", "Belgium", "Retail", 52000000, "Reduces small-lot retail weighting"]
-].map((item, index) => ({
+const transactionSeeds: TransactionSeed[] = [
+  { name: "Project Linden Quay", type: "Acquisition", stage: "Exclusivity", probability: 72, expectedClose: "2026-07-15", geography: "Netherlands", sector: "Logistics", price: 128000000, impact: "Adds prime Randstad logistics exposure" },
+  { name: "Project Atelier", type: "Acquisition", stage: "IC Review", probability: 48, expectedClose: "2026-09-30", geography: "France", sector: "Residential", price: 94000000, impact: "Improves living allocation in Lyon" },
+  { name: "Project Meridian Park", type: "Disposal", stage: "Documentation", probability: 85, expectedClose: "2026-06-28", geography: "Germany", sector: "Office", price: 156000000, impact: "Releases capital from non-core office cluster" },
+  { name: "Project Sienna", type: "Acquisition", stage: "Origination", probability: 25, expectedClose: "2026-12-12", geography: "Spain", sector: "Alternatives", price: 76000000, impact: "Introduces life sciences angle in Barcelona" },
+  { name: "Project Canal Market", type: "Disposal", stage: "Closing", probability: 96, expectedClose: "2026-04-25", geography: "Belgium", sector: "Retail", price: 52000000, impact: "Reduces small-lot retail weighting" }
+];
+
+export const transactions: Transaction[] = transactionSeeds.map((transaction, index) => ({
   id: `txn-${index + 1}`,
-  name: item[0],
-  type: item[1] as Transaction["type"],
-  stage: item[2] as Transaction["stage"],
-  probability: item[3] as number,
-  expectedClose: item[4] as string,
-  geography: item[5] as string,
-  sector: item[6] as string,
-  price: item[7] as number,
-  impact: item[8] as string,
+  name: transaction.name,
+  type: transaction.type,
+  stage: transaction.stage,
+  probability: transaction.probability,
+  expectedClose: transaction.expectedClose,
+  geography: transaction.geography,
+  sector: transaction.sector,
+  price: transaction.price,
+  impact: transaction.impact,
   classification: index < 1 ? "Investor Shareable" : "Internal Confidential",
   dataSource: "Transactions Pipeline",
   lastUpdated: "2026-03-08",
@@ -276,42 +297,46 @@ export const esgMetrics: ESGMetric[] = [
   }
 ];
 
-export const documents: Document[] = [
-  ["FY2025 Investor Presentation", "Presentations", "2026-02-20", "Investor Shareable"],
-  ["Q4 2025 Quarterly Report", "Quarterly Reports", "2026-02-18", "Investor Shareable"],
-  ["Fund Factsheet March 2026", "Factsheets", "2026-03-10", "Prospect Safe"],
-  ["Lux Prospectus Extract", "Prospectus", "2025-12-15", "Prospect Safe"],
-  ["Portfolio Leasing Tracker", "Internal Documents", "2026-03-11", "Internal Confidential"],
-  ["Valuation Committee Pack", "Internal Documents", "2026-03-06", "Internal Confidential"]
-].map((doc, index) => ({
+const documentSeeds: DocumentSeed[] = [
+  { name: "FY2025 Investor Presentation", category: "Presentations", date: "2026-02-20", classification: "Investor Shareable" },
+  { name: "Q4 2025 Quarterly Report", category: "Quarterly Reports", date: "2026-02-18", classification: "Investor Shareable" },
+  { name: "Fund Factsheet March 2026", category: "Factsheets", date: "2026-03-10", classification: "Prospect Safe" },
+  { name: "Lux Prospectus Extract", category: "Prospectus", date: "2025-12-15", classification: "Prospect Safe" },
+  { name: "Portfolio Leasing Tracker", category: "Internal Documents", date: "2026-03-11", classification: "Internal Confidential" },
+  { name: "Valuation Committee Pack", category: "Internal Documents", date: "2026-03-06", classification: "Internal Confidential" }
+];
+
+export const documents: Document[] = documentSeeds.map((document, index) => ({
   id: `doc-${index + 1}`,
-  name: doc[0] as string,
-  category: doc[1] as Document["category"],
-  date: doc[2] as string,
-  classification: doc[3] as Document["classification"],
+  name: document.name,
+  category: document.category,
+  date: document.date,
+  classification: document.classification,
   description: "Synthetic demonstration document entry showing controlled visibility and contextual metadata."
 }));
 
-export const dataSources: DataSource[] = [
-  ["Rent Roll", "Excel", "2026-03-12", "Valid", "Monthly", 48, 98, "Asset Finance"],
-  ["Asset Master", "System", "2026-03-10", "Valid", "Daily", 48, 99, "Data Office"],
-  ["Valuations", "Excel", "2026-03-09", "Warning", "Quarterly", 48, 95, "Valuation Lead"],
-  ["Investor Register", "Excel", "2026-03-08", "Valid", "Weekly", 28, 97, "Investor Relations"],
-  ["Debt Schedule", "Excel", "2026-03-11", "Warning", "Monthly", 6, 94, "Treasury"],
-  ["Performance Data", "System", "2026-03-12", "Valid", "Quarterly", 10, 99, "Performance Team"],
-  ["Benchmark Data", "External", "2026-03-05", "Valid", "Quarterly", 10, 96, "Performance Team"],
-  ["Transactions Pipeline", "Excel", "2026-03-07", "Error", "Weekly", 5, 89, "Investment Management"]
-].map((source, index) => ({
+const dataSourceSeeds: DataSourceSeed[] = [
+  { name: "Rent Roll", sourceType: "Excel", lastUpload: "2026-03-12", status: "Valid", frequency: "Monthly", linkedObjects: 48, completenessPct: 98, owner: "Asset Finance" },
+  { name: "Asset Master", sourceType: "System", lastUpload: "2026-03-10", status: "Valid", frequency: "Daily", linkedObjects: 48, completenessPct: 99, owner: "Data Office" },
+  { name: "Valuations", sourceType: "Excel", lastUpload: "2026-03-09", status: "Warning", frequency: "Quarterly", linkedObjects: 48, completenessPct: 95, owner: "Valuation Lead" },
+  { name: "Investor Register", sourceType: "Excel", lastUpload: "2026-03-08", status: "Valid", frequency: "Weekly", linkedObjects: 28, completenessPct: 97, owner: "Investor Relations" },
+  { name: "Debt Schedule", sourceType: "Excel", lastUpload: "2026-03-11", status: "Warning", frequency: "Monthly", linkedObjects: 6, completenessPct: 94, owner: "Treasury" },
+  { name: "Performance Data", sourceType: "System", lastUpload: "2026-03-12", status: "Valid", frequency: "Quarterly", linkedObjects: 10, completenessPct: 99, owner: "Performance Team" },
+  { name: "Benchmark Data", sourceType: "External", lastUpload: "2026-03-05", status: "Valid", frequency: "Quarterly", linkedObjects: 10, completenessPct: 96, owner: "Performance Team" },
+  { name: "Transactions Pipeline", sourceType: "Excel", lastUpload: "2026-03-07", status: "Error", frequency: "Weekly", linkedObjects: 5, completenessPct: 89, owner: "Investment Management" }
+];
+
+export const dataSources: DataSource[] = dataSourceSeeds.map((source, index) => ({
   id: `source-${index + 1}`,
-  name: source[0] as string,
-  sourceType: source[1] as DataSource["sourceType"],
-  lastUpload: source[2] as string,
-  status: source[3] as DataSource["status"],
-  frequency: source[4] as string,
-  linkedObjects: source[5] as number,
-  completenessPct: source[6] as number,
-  owner: source[7] as string,
-  dataQuality: (source[3] === "Error" ? "Watch" : source[3] === "Warning" ? "Medium" : "High") as DataSource["dataQuality"]
+  name: source.name,
+  sourceType: source.sourceType,
+  lastUpload: source.lastUpload,
+  status: source.status,
+  frequency: source.frequency,
+  linkedObjects: source.linkedObjects,
+  completenessPct: source.completenessPct,
+  owner: source.owner,
+  dataQuality: source.status === "Error" ? "Watch" : source.status === "Warning" ? "Medium" : "High"
 }));
 
 export const users: User[] = roles.map((role, index) => ({
