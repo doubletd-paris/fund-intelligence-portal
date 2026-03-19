@@ -8,6 +8,15 @@ import { Card, Pill } from "@/components/ui/primitives";
 import { parseDemoQuery } from "@/lib/query-engine";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
+const benchmarkChartData = benchmarkSeries.map((item) => ({
+  period: item.period,
+  fund: item.fund,
+  incomeReturn: item.incomeReturn,
+  capitalReturn: item.capitalReturn,
+  inrevOdce: item.inrevOdce,
+  msciPepfi: item.msciPepfi
+}));
+
 const debtMaturityRows = debtFacilities
   .filter((facility) => new Date(facility.maturityDate) <= new Date("2027-12-31"))
   .map((facility) => ({
@@ -16,6 +25,11 @@ const debtMaturityRows = debtFacilities
     drawn: formatCurrency(facility.drawn),
     maturity: formatDate(facility.maturityDate)
   }));
+
+const valuationResultChartData = assets.slice(0, 8).map((asset) => ({
+  period: asset.name,
+  value: asset.valuationHistory[asset.valuationHistory.length - 1]?.yoyChange ?? 0
+}));
 
 export default async function QueryPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const params = await searchParams;
@@ -53,7 +67,7 @@ export default async function QueryPage({ searchParams }: { searchParams: Promis
       {result.type === "performance" ? (
         <LineChartCard
           title="Structured benchmark output"
-          data={benchmarkSeries}
+          data={benchmarkChartData}
           lines={[
             { dataKey: "fund", color: "#204a74", name: "Fund" },
             { dataKey: "inrevOdce", color: "#6483a6", name: "INREV ODCE" },
@@ -78,7 +92,7 @@ export default async function QueryPage({ searchParams }: { searchParams: Promis
       {result.type === "valuation" ? (
         <BarChartCard
           title="Largest valuation increase this year"
-          data={assets.slice(0, 8).map((asset) => ({ period: asset.name, value: asset.valuationHistory[asset.valuationHistory.length - 1]?.yoyChange ?? 0 }))}
+          data={valuationResultChartData}
           bars={[{ dataKey: "value", color: "#204a74", name: "YoY %" }]}
         />
       ) : null}
