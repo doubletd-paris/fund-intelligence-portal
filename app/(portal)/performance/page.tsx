@@ -3,6 +3,15 @@ import { BarChartCard, ContributionBars, LineChartCard } from "@/components/char
 import { PageShell } from "@/components/layout/page-shell";
 import { Card } from "@/components/ui/primitives";
 
+const benchmarkChartData = benchmarkSeries.map((item) => ({
+  period: item.period,
+  fund: item.fund,
+  incomeReturn: item.incomeReturn,
+  capitalReturn: item.capitalReturn,
+  inrevOdce: item.inrevOdce,
+  msciPepfi: item.msciPepfi
+}));
+
 const rolling = benchmarkSeries.map((item) => ({
   period: item.period,
   threeYear: item.fund - 1.1,
@@ -28,7 +37,7 @@ export default function PerformancePage() {
       <div className="grid gap-4 xl:grid-cols-2">
         <LineChartCard
           title="Historical total return"
-          data={benchmarkSeries}
+          data={benchmarkChartData}
           lines={[
             { dataKey: "fund", color: "#204a74", name: "Fund" },
             { dataKey: "inrevOdce", color: "#6483a6", name: "INREV ODCE" },
@@ -37,7 +46,7 @@ export default function PerformancePage() {
         />
         <BarChartCard
           title="Income return vs capital return"
-          data={benchmarkSeries}
+          data={benchmarkChartData}
           bars={[
             { dataKey: "incomeReturn", color: "#204a74", name: "Income return" },
             { dataKey: "capitalReturn", color: "#b2c1d3", name: "Capital return" }
