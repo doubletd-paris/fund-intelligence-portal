@@ -17,13 +17,15 @@ import {
 } from "recharts";
 import { Card } from "@/components/ui/primitives";
 
+export type ChartDatum = Record<string, string | number>;
+
 export function LineChartCard({
   title,
   data,
   lines
 }: {
   title: string;
-  data: Record<string, string | number>[];
+  data: ChartDatum[];
   lines: { dataKey: string; color: string; name: string }[];
 }) {
   return (
@@ -53,7 +55,7 @@ export function BarChartCard({
   bars
 }: {
   title: string;
-  data: Record<string, string | number>[];
+  data: ChartDatum[];
   bars: { dataKey: string; color: string; name: string }[];
 }) {
   return (
@@ -84,7 +86,7 @@ export function AreaChartCard({
   color
 }: {
   title: string;
-  data: Record<string, string | number>[];
+  data: ChartDatum[];
   dataKey: string;
   color: string;
 }) {
